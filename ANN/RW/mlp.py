@@ -176,8 +176,8 @@ class Network():
         #model
         y_ = self.model(self.x)
 
-        #cost and training
-        with tf.name_scope("cost"):
+        #loss and training
+        with tf.name_scope("loss"):
             self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_, labels=self.y))
 
             #정규항 추가
@@ -244,6 +244,56 @@ class Network():
                 saver.save(sess, path + "/" + name + ".ckpt", step)
 
 if __name__ == "__main__":
+    # dataset = select_dataset('mnist')
+    # model = Network(dataset.x_size, dataset.y_size, [525])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+    #
+    # dataset = select_dataset('mnist')
+    # model = Network(dataset.x_size, dataset.y_size, [1050])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+
+    # dataset = select_dataset('svhn')
+    # model = Network(dataset.x_size, dataset.y_size, [750])
+    # model.run(dataset, 100000+0*895)
+    #
+    # tf.reset_default_graph()
+    #
+    # dataset = select_dataset('svhn')
+    # model = Network(dataset.x_size, dataset.y_size, [1500])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+
+    # dataset = select_dataset('cifar')
+    # model = Network(dataset.x_size, dataset.y_size, [750])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+    #
+    # dataset = select_dataset('cifar')
+    # model = Network(dataset.x_size, dataset.y_size, [1500])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+    #
+    # dataset = select_dataset('news')
+    # model = Network(dataset.x_size, dataset.y_size, [750])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+    #
+    # dataset = select_dataset('news')
+    # model = Network(dataset.x_size, dataset.y_size, [1500])
+    # model.run(dataset, 100000)
+    #
+    # tf.reset_default_graph()
+
+    # combine test = mlp + bn + dropout
+
     dataset = select_dataset('mnist')
     model = Network(dataset.x_size, dataset.y_size, [400, 200, 100],
                     batch_normalization=True,
@@ -274,6 +324,7 @@ if __name__ == "__main__":
                     droprate=0.5)
     model.run(dataset, 100000)
 
+    tf.reset_default_graph()
 
     # dataset = select_dataset('svhn')
     # model = Network(dataset.x_size, dataset.y_size, [750], droprate=0.0)

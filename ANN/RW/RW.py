@@ -198,9 +198,9 @@ class Network():
         #model
         y_ = self.model(self.x)
 
-        #cost and training
+        #loss and training
 
-        with tf.name_scope("cost"):
+        with tf.name_scope("loss"):
             self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_, labels=self.y))
 
             update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
@@ -208,7 +208,7 @@ class Network():
                 self.opt = tf.train.AdamOptimizer(learning_rate=learning_rate). \
                     minimize(self.loss, global_step=self.global_step)
 
-            tf.summary.scalar("cost", self.loss)
+            tf.summary.scalar("loss", self.loss)
 
         with tf.name_scope("accuracy"):
             compare = tf.equal(tf.argmax(self.y, 1), tf.argmax(y_, 1))
@@ -229,6 +229,7 @@ class Network():
             writer, writer_test, merged = NNutils.graph(path, sess)
 
             step = sess.run(self.global_step)
+            step_saved = step
             while step < step_limit:
                 print("step :", step)
                 for start, end in zip(range(0, len(dataset.train_data), self.batch_size),
@@ -255,7 +256,9 @@ class Network():
 
                 writer_test.add_summary(summary, step)
                 print("test results : ", accuracy, loss)
-                saver.save(sess, path + "/" + name + ".ckpt", step)
+                if step - step_saved > 1000:
+                    saver.save(sess, path + "/" + name + ".ckpt", step)
+                    step_saved = step
 
 if __name__ == "__main__":
     # dataset = select_dataset('svhn')
@@ -276,19 +279,101 @@ if __name__ == "__main__":
     #
     # tf.reset_default_graph()
 
-    # SIGMOID
+
+    # Activation function test = Sigmoid
 
     dataset = select_dataset('mnist')
     model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
-                    activation='sigmoid',
-                    batch_normalization=True)
+                    activation='sigmoid')
     model.run(dataset, 100000)
 
     tf.reset_default_graph()
 
     dataset = select_dataset('svhn')
     model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-                    activation='sigmoid',
+                    activation='sigmoid')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('news')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='sigmoid')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('cifar')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='sigmoid')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    # Activation function test = tanh
+
+    dataset = select_dataset('mnist')
+    model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
+                    activation='tanh')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('svhn')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='tanh')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('news')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='tanh')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('cifar')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='tanh')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    # Activation function test = ReLU
+
+    dataset = select_dataset('mnist')
+    model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
+                    activation='relu')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('svhn')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='relu')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('news')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='relu')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('cifar')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    activation='relu')
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    # combine test = RW + bn
+
+    dataset = select_dataset('mnist')
+    model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
                     batch_normalization=True)
     model.run(dataset, 100000)
 
@@ -296,7 +381,6 @@ if __name__ == "__main__":
 
     dataset = select_dataset('news')
     model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-                    activation='sigmoid',
                     batch_normalization=True)
     model.run(dataset, 100000)
 
@@ -304,17 +388,6 @@ if __name__ == "__main__":
 
     dataset = select_dataset('cifar')
     model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-                    activation='sigmoid',
-                    batch_normalization=True)
-    model.run(dataset, 100000)
-
-    tf.reset_default_graph()
-
-    # ReLU
-
-    dataset = select_dataset('mnist')
-    model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
-                    activation='relu',
                     batch_normalization=True)
     model.run(dataset, 100000)
 
@@ -322,50 +395,72 @@ if __name__ == "__main__":
 
     dataset = select_dataset('svhn')
     model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-                    activation='relu',
                     batch_normalization=True)
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    # combine test = RW + dropout
+
+    dataset = select_dataset('mnist')
+    model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
+                    droprate=0.5)
     model.run(dataset, 100000)
 
     tf.reset_default_graph()
 
     dataset = select_dataset('news')
     model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-                    activation='relu',
-                    batch_normalization=True)
+                    droprate=0.5)
     model.run(dataset, 100000)
 
     tf.reset_default_graph()
 
     dataset = select_dataset('cifar')
     model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-                    activation='relu',
-                    batch_normalization=True)
+                    droprate=0.5)
     model.run(dataset, 100000)
 
     tf.reset_default_graph()
 
-    # dataset = select_dataset('mnist')
-    # model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
-    #                 batch_normalization=True,
-    #                 droprate=0.5)
-    # model.run(dataset, 100000)
-    #
-    # tf.reset_default_graph()
-    #
-    # dataset = select_dataset('news')
-    # model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150], batch_normalization=True)
-    # model.run(dataset, 100000)
-    #
-    # tf.reset_default_graph()
-    #
-    # dataset = select_dataset('cifar')
-    # model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150], batch_normalization=True)
-    # model.run(dataset, 100000)
-    #
-    # tf.reset_default_graph()
-    #
-    # dataset = select_dataset('svhn')
-    # model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150], batch_normalization=True)
-    # model.run(dataset, 100000)
-    #
-    # tf.reset_default_graph()
+    dataset = select_dataset('svhn')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    droprate=0.5)
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    # combine test = RW + bn + dropout
+
+    dataset = select_dataset('mnist')
+    model = Network(dataset.x_size, dataset.y_size, [175, 175, 175],
+                    batch_normalization=True,
+                    droprate=0.5)
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('news')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    batch_normalization=True,
+                    droprate=0.5)
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('cifar')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    batch_normalization=True,
+                    droprate=0.5)
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
+    dataset = select_dataset('svhn')
+    model = Network(dataset.x_size, dataset.y_size, [150, 150, 150, 150, 150],
+                    batch_normalization=True,
+                    droprate=0.5)
+    model.run(dataset, 100000)
+
+    tf.reset_default_graph()
+
