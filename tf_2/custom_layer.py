@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 class CustomDenseLayer(tf.keras.layers.Layer):
     def __init__(self, num_outputs):
         # 텐서플로우 클래스 입력 인자 상속 및 입력 인자 선언
@@ -7,12 +8,12 @@ class CustomDenseLayer(tf.keras.layers.Layer):
         self.num_outputs = num_outputs
 
     def build(self, input_shape):
-        # 나머지 필요한 선언
-        self.kernel = self.add_variable("kernel", shape = [int(input_shape[-1]),
-                                                           self.num_outputs])
+        # 선언 함수. 여기 input 인자는 학습 때 들어오는 데이터의 형태(shape)로 이용할 수 있다.
+        self.kernel = self.add_variable("kernel", shape=[int(input_shape[-1]),
+                                                         self.num_outputs])
 
     def call(self, input):
-        # 실제 동작(연산)
+        # 실제 동작(연산) 여기 input 인자는 학습 때 들어오는 데이터를 의미한다.
         return tf.matmul(input, self.kernel)
 
 class ResnetIdenetityBlock(tf.keras.Model):
@@ -44,8 +45,10 @@ class ResnetIdenetityBlock(tf.keras.Model):
         x += input_tensor
         return tf.nn.relu(x)
 
-block = ResnetIdenetityBlock(1, [1, 2, 3])
 
+
+
+block = ResnetIdenetityBlock(1, [1, 2, 3])
 
 layer = CustomDenseLayer(10)
 print("yeah")
