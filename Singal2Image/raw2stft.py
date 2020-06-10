@@ -111,7 +111,7 @@ class RawPreprocess:
         plt.savefig(img_path)
         plt.close()
 
-    def ubㅇㅇ_velocity(self, datas, sample_rate, integrate_range_rate=0.015):
+    def create_velocity(self, datas, sample_rate, integrate_range_rate=0.015):
         # 적분을 통해 속도를 계산한다.
         # 전체 기간을 적분하면, 오차값이 쌓여서 그런지 값이 발산하는 경향이 있다. 따라서, 적분 구간(범위)를 한정하였다.
         vel_list = []
