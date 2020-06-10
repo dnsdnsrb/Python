@@ -1,28 +1,33 @@
 import tensorflow as tf
-import gym
+# import gym
 import numpy as np
 import random
 from collections import deque
-from gym.envs.registration import register
-class Buffer():
-    pass
+# from gym.envs.registration import register
 
-buffer = Buffer()
+x = np.array([1,2, 3, 4])
+x = x.view(2,)
+print(x)
 
-buffer.state = np.empty(0).reshape(0, 2)
-buffer.target = np.empty(0).reshape(0, 2)
-buffer.act = np.empty(0).reshape(0, 2)
-
-state = np.array([1, 2])
-state = state.reshape(1, -1)
-
-target = np.array([1.1, 2.2])
-target = target.reshape(1, -1)
-
-act = np.array([3, 4])
-act2 = np.array([3.3, 4.4])
-
-print(np.argmax(act))
+# class Buffer():
+#     pass
+#
+# buffer = Buffer()
+#
+# buffer.state = np.empty(0).reshape(0, 2)
+# buffer.target = np.empty(0).reshape(0, 2)
+# buffer.act = np.empty(0).reshape(0, 2)
+#
+# state = np.array([1, 2])
+# state = state.reshape(1, -1)
+#
+# target = np.array([1.1, 2.2])
+# target = target.reshape(1, -1)
+#
+# act = np.array([3, 4])
+# act2 = np.array([3.3, 4.4])
+#
+# print(np.argmax(act))
 #
 # length = state.shape[-1]
 # print(length)

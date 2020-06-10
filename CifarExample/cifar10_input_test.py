@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Tests for cifar10 input."""
+"""Singal2Image for cifar10 input."""
 
 from __future__ import absolute_import
 from __future__ import division
